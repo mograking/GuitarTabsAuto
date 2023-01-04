@@ -1,0 +1,24 @@
+
+    	var fretmodal = document.getElementById("fretmodal")
+	
+	var fretclose = document.getElementById("fretclose")
+
+	fretclose.onclick = function() { fretmodal.style.display = "none"; }
+
+	window.onclick = function()  { 
+		if(event.target == fretmodal){
+		fretmodal.style.display = "none";
+	}
+
+
+      const app = document.getElementById('app');
+
+      var element = document.getElementById;
+
+	<div  class="fretmodal" id="fretmodal">
+			<div  class="fretmodal-content" id="fretmodal-content">
+				<span class="fretclose" id="fretclose"> &times; </span>
+				<p> some text </p>
+				</div>
+	</div> 
+
