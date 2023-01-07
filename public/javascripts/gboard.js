@@ -1,6 +1,8 @@
 const app = document.getElementById('app');
-var dataTabs = new Array(6).fill(0).map(() => new Array(40).fill(-1));
+var globalTotalSlots = 100;
+var dataTabs = new Array(6).fill(0).map(() => new Array(globalTotalSlots).fill(-1));
 var dataToSend;
+
 
 const StringToRow = {
 	'E' : 0,
@@ -26,14 +28,20 @@ function PlayInterface(props){
 	function loadAndPlayAudio(){
 		
 		var xplayer  = document.getElementById('audio');
-		console.log(xplayer);
 		xplayer.load();
+		xplayer.loop = true;
 		xplayer.play();
+	}
+
+	function PauseAudio(){
+		var xplayer  = document.getElementById('audio');
+		xplayer.pause();
 	}
 
 	return (
 		<div className={'PlayInterfaceDiv'} >
-		<button className={'button is-danger is-large'} id={'PlayButton'} onClick={loadAndPlayAudio} value={'Play'} >PLAY< /button>
+		<button className={'dashcontrols button is-danger is-large'} id={'PlayButton'} onClick={loadAndPlayAudio} value={'Play'} >PLAY< /button>
+		<button className={'dashcontrols button is-danger is-large'} id={'PauseButton'} onClick={PauseAudio} value={'Pause'} >PAUSE< /button>
 		<audio id={'audio'} controls={'controls'} >
 			<source id={'audioSource'} src=""></source>
 		</audio>
@@ -44,20 +52,21 @@ function PlayInterface(props){
 
 function getTabsAll(){
 	var tabslist =[];
-	for ( let indexTime = 0 ; indexTime < 40; indexTime++ ) {
+	for ( let indexTime = 0 ; indexTime < globalTotalSlots; indexTime++ ) {
 		for( let indexString = 0; indexString< 6; indexString++ ) {
 			if( dataTabs[indexString][indexTime] !=-1 ){
 				tabslist.push( [ indexTime, indexString, dataTabs[indexString][indexTime] ] );
 			}
 		}
 		}
-	console.log(tabslist);
 	dataToSend = tabslist;
 }
 
 function sendTabData(){
 	getTabsAll();
 	const postbodytabs = JSON.stringify(dataToSend);
+
+	console.log(dataToSend);
 
   	fetch('/upload_data', {
     		method: 'post',
@@ -77,27 +86,33 @@ function sendTabData(){
 }
 
 
+function ClearTablature(props){
 
-function setFretValue(gsfullid){
-	console.log(gsfullid+'clicked');
-	modal.style.display = "block";
-}
+	function clearTablature(){
+		var gstrlist = ['E', 'A', 'D', 'G', 'b', 'ee']
+		for( var gstrnum=0; gstrnum<6; gstrnum++ )
+		{
+			for(var gtimeslot = 0; gtimeslot<globalTotalSlots; gtimeslot++){
+				var gstrname = gstrlist[gstrnum];
+				var singleslotid = 'N1-'+gstrname.toString()+'-'+gtimeslot.toString()+'nu';
+				var singleslot = document.getElementById('N1-'+gstrname+'-'+gtimeslot.toString()+'nu');
+				singleslot.innerHTML='';
+				dataTabs = new Array(6).fill(0).map(() => new Array(globalTotalSlots).fill(-1));
 
-function CollectData(props){
+			}
+		
+		}
+	}
+	
 	return (
-		<button className={'button is-warning is-large'} onClick={gettabsall} >get data from all</button>
+		<button className={'dashcontrols button is-info is-large'} onClick={clearTablature} >Clear Tabs</button>
 	)
 }
 
-function CollectData(props){
-	return (
-		<button className={'button is-warning is-large'} onClick={gettabsall} >get data from all</button>
-	)
-}
 
 function SubmitData(props){
 	return (
-		<button className={'button is-info is-large'} onClick={sendTabData} >Send data to server</button>
+		<button className={'dashcontrols button is-info is-large'} onClick={sendTabData} >Build</button>
 	)
 }
 
@@ -130,14 +145,19 @@ function GSItem(props){
 
 	function handlefretbtnclick(fretnumber) {
 		return (eventobj) =>{
-			console.log(fretnumber);
-			
+			if(fretnumber==-2){
+
+			document.getElementById(fullid+'sel').style.display = 'none';
+			document.getElementById(fullid+'nu').style.display = '';
+			document.getElementById(fullid+'nu').style.width = '20px';
+			return;
+			}
+
 			document.getElementById(fullid+'nu').innerHTML= fretnumber!=-1 ? fretnumber : '';
 			document.getElementById(fullid+'sel').style.display = 'none';
 			document.getElementById(fullid+'nu').style.display = '';
 			document.getElementById(fullid+'nu').style.width = '20px';
 			dataTabs[ StringToRow[props.gstrid.toString()] ][ props.gskey ] =fretnumber;
-			console.log(dataTabs[ StringToRow[props.gstrid.toString()] ]);
 		}
 	}
 
@@ -147,24 +167,24 @@ function GSItem(props){
 		return (
 			<>
 <div className={"fretbtns"}>
-<span className={"fretbtnsclose"}>&times;</span>
+<span className={"fretbtnsclose"} onClick={handlefretbtnclick(-2)}>&times;</span>
 			<input hidden type="text" id={fullid+'input'} defaultValue={''} />
 			<p>
-<button className={"button is-primary fretselectbtn"} onClick={handlefretbtnclick(0)} id={"fret0"}>0</button>
-<button className={"button is-primary fretselectbtn"} onClick={handlefretbtnclick(1)} id={"fret1"}>1</button>
-<button className={"button is-primary fretselectbtn"} onClick={handlefretbtnclick(2)} id={"fret2"}>2</button>
-<button className={"button is-primary fretselectbtn"} onClick={handlefretbtnclick(3)} id={"fret3"}>3</button>
-<button className={"button is-primary fretselectbtn"} onClick={handlefretbtnclick(4)} id={"fret4"}>4</button>
-<button className={"button is-primary fretselectbtn"} onClick={handlefretbtnclick(5)} id={"fret5"}>5</button>
-<button className={"button is-primary fretselectbtn"} onClick={handlefretbtnclick(6)} id={"fret6"}>6</button>
-<button className={"button is-primary fretselectbtn"} onClick={handlefretbtnclick(7)} id={"fret7"}>7</button>
-<button className={"button is-primary fretselectbtn"} onClick={handlefretbtnclick(8)} id={"fret8"}>8</button>
-<button className={"button is-primary fretselectbtn"} onClick={handlefretbtnclick(9)} id={"fret9"}>9</button>
-<button className={"button is-primary fretselectbtn"} onClick={handlefretbtnclick(10)} id={"fret10"}>10</button>
-<button className={"button is-primary fretselectbtn"} onClick={handlefretbtnclick(11)} id={"fret11"}>11</button>
-<button className={"button is-primary fretselectbtn"} onClick={handlefretbtnclick(12)} id={"fret12"}>12</button>
-<button className={"button is-primary fretselectbtn"} onClick={handlefretbtnclick(13)} id={"fret13"}>13</button>
-<button className={"button is-primary fretselectbtn"} onClick={handlefretbtnclick(-1)} id={"clear"}>clear</button>
+<button className={"button is-primary fretselectbtn"} onClick={handlefretbtnclick(0)} id={fullid+"fret0"}>0</button>
+<button className={"button is-primary fretselectbtn"} onClick={handlefretbtnclick(1)} id={fullid+"fret1"}>1</button>
+<button className={"button is-primary fretselectbtn"} onClick={handlefretbtnclick(2)} id={fullid+"fret2"}>2</button>
+<button className={"button is-primary fretselectbtn"} onClick={handlefretbtnclick(3)} id={fullid+"fret3"}>3</button>
+<button className={"button is-primary fretselectbtn"} onClick={handlefretbtnclick(4)} id={fullid+"fret4"}>4</button>
+<button className={"button is-primary fretselectbtn"} onClick={handlefretbtnclick(5)} id={fullid+"fret5"}>5</button>
+<button className={"button is-primary fretselectbtn"} onClick={handlefretbtnclick(6)} id={fullid+"fret6"}>6</button>
+<button className={"button is-primary fretselectbtn"} onClick={handlefretbtnclick(7)} id={fullid+"fret7"}>7</button>
+<button className={"button is-primary fretselectbtn"} onClick={handlefretbtnclick(8)} id={fullid+"fret8"}>8</button>
+<button className={"button is-primary fretselectbtn"} onClick={handlefretbtnclick(9)} id={fullid+"fret9"}>9</button>
+<button className={"button is-primary fretselectbtn"} onClick={handlefretbtnclick(10)} id={fullid+"fret10"}>10</button>
+<button className={"button is-primary fretselectbtn"} onClick={handlefretbtnclick(11)} id={fullid+"fret11"}>11</button>
+<button className={"button is-primary fretselectbtn"} onClick={handlefretbtnclick(12)} id={fullid+"fret12"}>12</button>
+<button className={"button is-primary fretselectbtn"} onClick={handlefretbtnclick(13)} id={fullid+"fret13"}>13</button>
+<button className={"button is-primary fretselectbtn"} onClick={handlefretbtnclick(-1)} id={fullid+"clear"}>clear</button>
 			</p>
 </div>
 			</>
@@ -172,18 +192,23 @@ function GSItem(props){
 	}
 
 
+
+
+
 	function paramtest(){
+
+		const allfretselectors = document.querySelectorAll('.gsitemfretseldiv');
+
+		allfretselectors.forEach( fsts =>{
+			fsts.style.display= 'none';
+		})
+
 
 		document.getElementById(fullid+'nu').style.display = 'none';
 		document.getElementById(fullid+'sel').style.display = 'block';
 
 	}
 
-	function handleFretChange(){
-		console.log(document.getElementById(fullid+'sel').firstChild.value);
-		document.getElementById(fullid+'sel').style.display = 'none';
-
-	}
 
 	return ( 
 		<>
@@ -201,7 +226,7 @@ function GSItem(props){
 function GSasATable(props){
 
 	const rows = [] 
-		for( let i =0; i<40; i++ ){
+		for( let i =0; i<globalTotalSlots; i++ ){
 			rows.push(<GSItem key={i} gskey={i} gsbid={props.gsbid} gstrid={props.gstrid} />)
 		}
 
@@ -252,4 +277,4 @@ function GString(props) {
 	       )
 }
 
-ReactDOM.render(<> <CollectData/> <SubmitData/> <PlayInterface/> <GSBoardv2 gsbid={1} /> </>, app)
+ReactDOM.render(<> <SubmitData/> <ClearTablature/> <PlayInterface/> <GSBoardv2 gsbid={1} /> </>, app)

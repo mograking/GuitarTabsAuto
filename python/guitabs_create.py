@@ -3,6 +3,7 @@ import subprocess,sys
 notes_directory = "./assets/allthenotes/"
 posttabs_directory = "./public/posttabs/"
 publicsongs_directory = "./public/wav/"
+timescalingfactor=4.0
 
 
 
@@ -130,6 +131,15 @@ def read_tablist_from_file(file):
         tablist += [ [line[0], int(line[1]), float(line[2])] ]
     return tablist
 
+def getMinLength(file):
+    f = open(file,'r')
+    lines = f.read().splitlines()
+    minlength = -1
+    for line in lines:
+        line = line.split('-')
+        minlength = max(minlength , float(line[0])/timescalingfactor  )
+    return minlength
+
 def read_tablist_from_posttabfile(file):
     stringnumtochar = dict()
     stringnumtochar[0] = 'E'
@@ -140,7 +150,6 @@ def read_tablist_from_posttabfile(file):
     stringnumtochar[5] = 'e'
     f = open(file,'r')
     lines = f.read().splitlines()
-    timescalingfactor = 5.0
     tablist=[]
     for line in lines:
         line = line.split('-')
@@ -174,12 +183,13 @@ def sox_append(song, note):
 
 posttabfile = sys.argv[1]
 testfile = "../public/posttabs/tab_11eb671814ab0c2e2c7b.post"
+testfile2 = "tab_fe12daa8d1209b7cc63b.post"
 
 tabsfile = posttabfile
 
 newwavfile_name = tabsfile[:-5]
 
-create_new_song_from_tablist( publicsongs_directory+newwavfile_name+'.wav', 8, read_tablist_from_posttabfile(posttabs_directory+str(posttabfile)))
+create_new_song_from_tablist( publicsongs_directory+newwavfile_name+'.wav', getMinLength(posttabs_directory+tabsfile)+1, read_tablist_from_posttabfile(posttabs_directory+str(tabsfile)))
 #create_new_song_from_tablist("../testfolder/svn2.wav", 8, read_tablist_from_posttabfile(testfile))
 
 sys.stdout.flush()

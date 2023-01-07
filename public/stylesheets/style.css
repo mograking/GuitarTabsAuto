@@ -17,26 +17,32 @@ a {
 }
 
 .gboardc{
-	width:1600px;
+	width:3000px;
 	height:400px;
 	border: solid;
 	border-color: yellow;
+}
+.gsboardv2c{
+	overflow-x:scroll;
 }
 
 
 .gstablec{
 	border : 0px solid;
-	width: 1400px;
 	height: 60px;
+	width:3000px;
 	margin: 10px;
 }
 
 .gstablerowc{
 }
 
+td{
+}
+
 .gstableitemc{
 	border: 0px solid;
-	width : 20px;
+	width : 30px !important;
 	font-size:22px;
 }
 
@@ -87,14 +93,23 @@ a {
 
 .gsitemfretseldiv{
 	display:none;
-	margin-top:20px;
-	width: 100px;
-  position: relative;
-  left: calc(-40px + 50%);
+  	position: absolute;
+	width:800px;
+	top: 200px;
+	left:500px;
+	padding:3px;
+	z-index:1;
+	background-color: white;
+	border: 1px solid;
 }
 
 .fretselectbtn{
-	display: inline-block;
+	margin-left:2px;
+	margin-top:1px;
+	align:center;
+}
+
+.fretbtns{
 }
 
 .playSongForm{
@@ -105,5 +120,15 @@ a {
 	position: relative;
 	top: -45px;
 	background-color:brown;
+	width:3000px;
 	height: 5px;
+}
+
+.dashcontrols{
+	display: inline-block;
+}
+
+.PlayInterfaceDiv{
+
+	display: inline-block;
 }
