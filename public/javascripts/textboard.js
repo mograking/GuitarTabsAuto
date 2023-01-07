@@ -66,9 +66,16 @@ function BuildRiff(props){
 	}
 
 	function buildTabs(event){
+		var cols = 60
+		var rows = 7
+
+		var defaultText = '-'.repeat(cols) +'\n';
+		defaultText= defaultText.repeat(6);
 
 		disablePlayPause();
-		setTimeout(enablePlayPause, 4000);
+		if ( document.getElementById('TablatureInput1').value != defaultText) 
+		setTimeout(enablePlayPause, 8000);
+		else setTimeout(enablePlayPause, 4000);
 
 		var dataToSend = [];
 		var initial_time = 0;
@@ -101,7 +108,7 @@ function BuildRiff(props){
 
 	}
 	return (
-		<button  className={'button is-secondary is-large is-rounded '} onClick={buildTabs} >BUILD</button>
+		<button  className={'button dashbutton is-secondary is-large is-rounded '} onClick={buildTabs} >BUILD</button>
 	)
 }
 
@@ -121,8 +128,8 @@ function PlayRiff(props){
 
 	return (
 		<>
-		<button  className={'button is-primary is-large is-rounded '} id={'PlayButton'} onClick={loadAndPlayAudio} >PLAY</button>
-		<button className={'button is-info is-large is-rounded '} id={'PauseButton'} onClick={PauseAudio} >PAUSE< /button>
+		<button  className={'button dashbutton is-primary is-large is-rounded '} id={'PlayButton'} onClick={loadAndPlayAudio} >PLAY</button>
+		<button className={'button dashbutton is-info is-large is-rounded '} id={'PauseButton'} onClick={PauseAudio} >PAUSE< /button>
 		<audio id={'audio'} controls={'controls'} >
 		<source id={'audioSource'} src=""></source>
 		</audio>
@@ -148,7 +155,31 @@ function ClearTablature(props){
 
 
 	return (
-		<button  className={'button is-warning is-rounded is-large'} onClick={clearTablature} >CLEAR</button>
+		<button  className={'button dashbutton is-warning is-rounded is-large'} onClick={clearTablature} >CLEAR</button>
+	)
+}
+
+function ShowExample(props){
+
+
+	var godfathertheme1 = 
+		"---0-3-2-0-3-0-2-0-------------0-3-2-0-3-0-2-0--------------\n-0-----------------1-3--0----0-----------------0---------1-4\n-------------------------------------------------3-2---2----\n------------------------------------------------------------\n------------------------------------------------------------\n------------------------------------------------------------\n";
+
+	var godfathertheme2 = 
+		"-2----------0-----------------------------------------------\n--------1-4------------3-1-0-3-1-1-0-0----------------------\n------2--------------0--------------------------------------\n-------------------2--------------------1--2----------------\n------------------------------------------------------------\n------------------------------------------------------------\n";
+
+
+
+
+	function showExample(){
+		var board1 = document.getElementById('TablatureInput0');
+		var board2 = document.getElementById('TablatureInput1');
+		board1.value = godfathertheme1;
+		board2.value = godfathertheme2;
+	}
+
+	return (
+		<button  className={'button dashbutton is-info is-rounded is-large'} onClick={showExample} >Example</button>
 	)
 }
 
@@ -199,6 +230,7 @@ function GBoardv3(props){
 		<BuildRiff baseID={baseID} numberOfBoards={2} />
 		<PlayRiff baseID={baseID} />
 		<ClearTablature baseID={baseID} numberOfBoards={2} />
+		<ShowExample baseID={baseID} numberOfBoards={2} />
 		</div>
 		<GTextAutoBoards baseID={baseID} numberOfBoards={2} />
 		</div>
