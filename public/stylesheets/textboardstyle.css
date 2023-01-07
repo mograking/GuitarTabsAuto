@@ -1,5 +1,30 @@
+body{
+	background-image: url("https://cdn.fansshare.com/photo/backgroundimage/free-cool-backgrounds-for-websites-wood-for-website-1800641241.jpg");
+	height:1200px;
+	background-position:center;
+	background-repeat: no-repeat;
+	background-size: cover;
+}
 .TablatureInput{
 	font-size:40px;
 	overflow-x:scroll;
 	font-family: monospace;
+	background-color:black;
+	color:white;
+}
+
+
+button, audio{
+	margin-top: 10px;
+	margin-bottom: 10px;
+	margin-right:30px;
+	margin-left:20px;
+}
+
+.GTAapp{
+	margin: 0% 10%;
+	padding-top:5%;
+}
+
+textarea{
 }

@@ -4,7 +4,6 @@ const app = document.getElementById('app');
 function setNewSongID(urlwithgetdata){
 	
 	const newsongid_ = (new URL(urlwithgetdata)).searchParams.get('songid')
-	document.getElementById('PlayButton').disabled = false;
 	document.getElementById('audioSource').src = 'wav/tab_'+newsongid_+'.wav';
 
 }
@@ -41,7 +40,35 @@ function BuildRiff(props){
 
 	}
 
+	function disablePlayPause(){
+		var playbuttonx = document.getElementById('PlayButton');
+		var pausebuttonx =document.getElementById('PauseButton');
+
+		pausebuttonx.disabled= true;
+		playbuttonx.disabled= true;
+
+		playbuttonx.innerHTML = "WAIT";
+		pausebuttonx.innerHTML = "WAIT";
+
+
+	}
+
+	function enablePlayPause(){
+		var playbuttonx = document.getElementById('PlayButton');
+		var pausebuttonx =document.getElementById('PauseButton');
+
+		pausebuttonx.disabled= false;
+		playbuttonx.disabled= false;
+
+		playbuttonx.innerHTML = "PLAY";
+		pausebuttonx.innerHTML = "PAUSE";
+
+	}
+
 	function buildTabs(event){
+
+		disablePlayPause();
+		setTimeout(enablePlayPause, 4000);
 
 		var dataToSend = [];
 		var initial_time = 0;
@@ -58,7 +85,7 @@ function BuildRiff(props){
 				if ( es < stringLength ) es = stringLength;
 				for ( var indexTime = 0; indexTime < stringLength; indexTime++ ) {
 					if( Strings_array[indexString][indexTime] != '-') {
-						dataToSend.push( [ indexTime+initial_time, indexString, toFret(Strings_array[indexString][indexTime] )   ]  ) ;
+						dataToSend.push( [ indexTime+initial_time, 5-indexString, toFret(Strings_array[indexString][indexTime] )   ]  ) ;
 
 					}
 				}
@@ -74,9 +101,7 @@ function BuildRiff(props){
 
 	}
 	return (
-		<div className={'buildriff dashcontrol'}>
-		<button  className={'button is-secondary is-large'} onClick={buildTabs} >BUILD </button>
-		</div>
+		<button  className={'button is-secondary is-large is-rounded '} onClick={buildTabs} >BUILD</button>
 	)
 }
 
@@ -93,14 +118,37 @@ function PlayRiff(props){
 		var xplayer  = document.getElementById('audio');
 		xplayer.pause();
 	}
+
 	return (
-		<div className={'playriff dashcontrol'}>
-		<button  className={'button is-danger is-large'} id={'PlayButton'} onClick={loadAndPlayAudio} >PLAY</button>
-		<button className={'button is-info is-large'} id={'PauseButton'} onClick={PauseAudio} >PAUSE< /button>
+		<>
+		<button  className={'button is-primary is-large is-rounded '} id={'PlayButton'} onClick={loadAndPlayAudio} >PLAY</button>
+		<button className={'button is-info is-large is-rounded '} id={'PauseButton'} onClick={PauseAudio} >PAUSE< /button>
 		<audio id={'audio'} controls={'controls'} >
 		<source id={'audioSource'} src=""></source>
 		</audio>
-		</div>
+		</>
+	)
+}
+
+function ClearTablature(props){
+
+	function clearTablature(){
+	var cols = 60
+	var rows = 7
+
+	var defaultText = '-'.repeat(cols) +'\n';
+	defaultText= defaultText.repeat(6);
+		for ( var indexTab = 0; indexTab < props.numberOfBoards; indexTab++ ) {
+
+			var board_ = document.getElementById('TablatureInput'+indexTab);
+			board_.value = defaultText;
+		}
+	}
+
+
+
+	return (
+		<button  className={'button is-warning is-rounded is-large'} onClick={clearTablature} >CLEAR</button>
 	)
 }
 
@@ -146,11 +194,14 @@ function GBoardv3(props){
 
 	return (
 
-		<>
+		<div className={'GTAapp'}>
+		<div className={'dashcontrol'}>
 		<BuildRiff baseID={baseID} numberOfBoards={2} />
 		<PlayRiff baseID={baseID} />
+		<ClearTablature baseID={baseID} numberOfBoards={2} />
+		</div>
 		<GTextAutoBoards baseID={baseID} numberOfBoards={2} />
-		</>
+		</div>
 
 	)
 }
