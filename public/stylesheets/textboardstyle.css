@@ -6,7 +6,8 @@ body{
 	background-size: cover;
 }
 .TablatureInput{
-	font-size:40px;
+	width:80vw;
+	font-size:2vw;
 	overflow-x:scroll;
 	font-family: monospace;
 	background-color:black;
